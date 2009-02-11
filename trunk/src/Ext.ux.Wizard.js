@@ -146,7 +146,7 @@ Ext.ux.Wizard = Ext.extend(Ext.ux.BasicWizard, {
 	
 	initCards: function(pages){
 		var self = this;
-		return new Ext.ux.XMetaForm({
+		return new Ext.ux.form.XMetaForm({
 			loadingText: this.loadingText,
 			savingText: this.savingText,
 			layout: this.animate ? 'slickcard' : 'card',

@@ -17,7 +17,7 @@
 	<script type="text/javascript" src="src/Ext.ux.WizardWest.js"></script>
     <script type="text/javascript" src="src/Ext.ux.WizardHeader.js"></script>
 	<script type="text/javascript" src="src/Ext.ux.BasicWizard.js"></script>
-	<script type="text/javascript" src="../../../lib/extjs/custom/Ext.ux.XMetaForm.js"></script>
+	<script type="text/javascript" src="../../../lib/extjs/custom/Ext.ux.form.XMetaForm.js"></script>
     <script type="text/javascript" src="src/Ext.ux.Wizard.js"></script>
 
     <script type="text/javascript">
@@ -25,104 +25,6 @@
 			function() {			    
 				Ext.QuickTips.init();
 				Ext.BLANK_IMAGE_URL = '../../../lib/extjs/ext_2_2_1/resources/images/default/s.gif';
-				
-				/*var appDialogs = {
-					wiz_dyn_dialog: function(ctx){
-						if(!Ext.get(ctx.id + '_win')){
-		        			var win = new Ext.Window({
-						         id:ctx.id + '_win',
-								 layout:'fit',
-								 width:550,
-								 modal: true,
-								 constrain: true,
-								 height: 350,
-								 title: ctx.text,							 
-								 items: {
-									xtype: 'wizard',
-									id: 'wiz-test',
-									backBtnText: 'Previous',
-									endBtnText: 'Submit',
-									animate: true,
-									frame: false,
-									height: 350,
-									replayTo: 1,
-									west: {
-										width: 80,
-										bodyStyle: 'background:#fff url(imgs/wizard-wand.jpg) center bottom no-repeat;'
-									},
-									north: {
-										height: 55
-									},
-									autoInit: {
-										url: 'php/wizardconfig.php',
-										params: {
-										    query: 'get',								    
-											mode: 'userprofile'
-										}
-									},
-									extraBtns: [{
-										tooltip: 'Help',
-										text: 'Help',
-										iconCls: 'help-btn'
-									}, {
-										text: 'Reset',
-										handler: function(){
-											var wiz = Ext.getCmp('wiz-test');
-											wiz.reset(); // having problems with this
-										}
-									}]
-								}
-						    });	
-										    
-						    win.show();
-							win.center();	
-	        			}
-					},
-					
-					wiz_adding_dialog: function(ctx){
-						if(!Ext.get(ctx.id + '_win')){
-		        			var win = new Ext.Window({
-						         id:ctx.id + '_win',
-								 layout:'fit',
-								 width:550,
-								 modal: true,
-								 constrain: true,
-								 height: 350,
-								 title: ctx.text,							 
-								 items: {
-									xtype: 'wizard',
-									id: 'wiz-test',
-									backBtnText: 'Previous',
-									endBtnText: 'Submit',
-									animate: true,
-									frame: false,
-									height: 350,
-									north: {
-										height: 55
-									},
-									autoInit: {
-										url: 'php/wizardconfig.php'
-									},
-									listeners: {
-									 	'afternav': function(){	
-											var activeCard = this.getActiveCard();
-											var cardIndex = activeCard.index;
-											// we should only load when going foward
-											if(this.dir === 1 && cardIndex === 5){
-												this.cards.load({
-													url: 'php/addingcards.php'
-												});													
-											}
-										}
-									}
-								}
-						    });	
-										    
-						    win.show();
-							win.center();	
-	        			}
-					}
-				};*/
 				
 				var runBasicSample = function(){
 					var win = new Ext.Window({
@@ -312,7 +214,6 @@
 	<center>
 		<button id="basic">Basic Usage</button>
 		<button id="meta">Dynamic Cards / Pages Usage</button>
-		<button id="inject">Dynamic Cards / Pages Addition</button>
 	</center>
 </body>
 </html>

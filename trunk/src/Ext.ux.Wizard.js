@@ -146,6 +146,9 @@ Ext.ux.Wizard = Ext.extend(Ext.ux.BasicWizard, {
 	
 	initCards: function(pages){
 		var self = this;
+		if(this.autoInit !== false){
+			Ext.apply(this.autoInit.params || {}, {meta:true})
+		}
 		return new Ext.ux.form.XMetaForm({
 			loadingText: this.loadingText,
 			savingText: this.savingText,
@@ -161,7 +164,7 @@ Ext.ux.Wizard = Ext.extend(Ext.ux.BasicWizard, {
 				autoScroll: true,
 				bodyStyle: 'padding:10px; position:relative;'
 			},
-			autoInit: Ext.apply(this.autoInit.params || {}, {meta:true}),
+			autoInit: this.autoInit,
 			url: ((typeof this.autoInit == 'object') ? this.autoInit.url : this.url || ''),
 			items: this.itemsInit(pages),
 			bindHandler : function() {

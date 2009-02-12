@@ -92,6 +92,10 @@ Ext.ux.Wizard = Ext.extend(Ext.ux.BasicWizard, {
 	 */
 	monitorValid: true,
 	
+	/**
+     * Inits this component with the specified config-properties and automatically
+     * creates its components.
+     */
 	initComponent: function(){
 		this.prev = {};		
 		Ext.ux.Wizard.superclass.initComponent.apply(this, arguments);
@@ -117,14 +121,15 @@ Ext.ux.Wizard = Ext.extend(Ext.ux.BasicWizard, {
 		
 		this.addEvents(
 			/**
-			  * @event help
-			  * Fires when the wizard help button is clicked
+			  * @event help Fires when the wizard help button is clicked
+			  * @param {Ext.Panel} activeCard the currently active card
 			  */
 			 'help',
 			 
 			 /**
-			  * @event metachange
-			  * Fires when crads are recieved from the server
+			  * @event metachange Fires when crads are recieved from the server
+			  * @param {Ext.ux.XMetaForm} form the form makin the request for cards
+			  * @param {Object} meta the metadat response from the server
 			  */
 			 'metachange'
 		);
@@ -144,6 +149,10 @@ Ext.ux.Wizard = Ext.extend(Ext.ux.BasicWizard, {
 		}
 	},
 	
+	/**
+	 * @private 
+	 * @param {Object} pages
+	 */
 	initCards: function(pages){
 		var self = this;
 		if(this.autoInit !== false){
@@ -181,6 +190,10 @@ Ext.ux.Wizard = Ext.extend(Ext.ux.BasicWizard, {
 		});
 	},
 	
+	/**
+	 * @private
+	 * @param {Object} pages
+	 */
 	itemsInit: function(pages){
 		var items = Ext.ux.Wizard.superclass.itemsInit.apply(this, arguments);
 		if(this.reviewEntries === true && Ext.isArray(items)){
@@ -192,7 +205,10 @@ Ext.ux.Wizard = Ext.extend(Ext.ux.BasicWizard, {
 		return items;
 	},
 	
-	// private
+	/**
+	 * @private
+	 * @param {Object} config
+	 */
 	buildPage: function(config){	
 		if( !Ext.isEmpty(config) ){
 			this.buildPlugins(config);
@@ -217,14 +233,19 @@ Ext.ux.Wizard = Ext.extend(Ext.ux.BasicWizard, {
 		return config;
 	},
 	
-	// private
+	/**
+	 * @private
+	 */
 	buildToolbar: function(){
 		var tbar = this.getToolbar();
 		tbar.add(this.helpBtn || '', '->', this.backBtn, '', '-', '', this.nextBtn, this.replayBtn || '');
 		tbar.doLayout();
 	},
 	
-	// private
+	/**
+	 * Updates the step / trail information
+	 * @param {Ext.Panel} activeCard the currently active card
+	 */
 	updateTrails: function(activeCard){
 		Ext.ux.Wizard.superclass.updateTrails.apply(this, arguments);
 		if(this.useTrail === true){
@@ -232,6 +253,10 @@ Ext.ux.Wizard = Ext.extend(Ext.ux.BasicWizard, {
 		}
 	},
 	
+	/**
+     * If we are loading cards from the server, then disable the toolbar
+     * till we are done.
+     */
 	afterRender: function(){
 		Ext.ux.Wizard.superclass.afterRender.apply(this, arguments);		
 		if(this.autoInit !== false){
@@ -241,7 +266,7 @@ Ext.ux.Wizard = Ext.extend(Ext.ux.BasicWizard, {
 	
 	/**
 	 * Called when we get cards from the server
-	 * @param {Object} form The internal Ext.ux.XMetaForm making the request
+	 * @param {Ext.ux.XMetaForm} form The formpanel making the request
 	 * @param {Object} meta The configurations from the server
 	 */
 	onMetaChange: function(form, meta){
@@ -292,6 +317,7 @@ Ext.ux.Wizard = Ext.extend(Ext.ux.BasicWizard, {
 	 * Return the Ext.form.Field values from a card
 	 * @param {Number} index The index of the card to inspect
 	 * @param {Boolean} forDisplay Are requesting values for display? (usually if Ext.ux.Wizard#reviewEntries is true)
+	 * 
 	 * @return {Object} The card's input values
 	 */
 	getCardValues: function(index, forDisplay){		
@@ -367,11 +393,13 @@ Ext.ux.Wizard = Ext.extend(Ext.ux.BasicWizard, {
 	},
 	
 	/**
+	 * Usually called internally by {@link Ext.ux.Wizard#getNext}
 	 * This presently does routing with single field values,
 	 * have not been tested with fields that can have multiple values
-	 * and will likely fail when we need to route based on the values
-	 * of several fields
-	 * @private
+	 * and will likely fail when we need to route based on the values of several fields.
+	 * @param {Ext.Panel} panel the currently active card
+	 * 
+	 * @return {Number} The card index we should navigate to from here.
 	 */
 	sequenceCtrl: function(panel){
 	    var seqIndex = null;
@@ -382,13 +410,20 @@ Ext.ux.Wizard = Ext.extend(Ext.ux.BasicWizard, {
 	        	seqIndex = field.values[fieldValues[field.key]];
 	      	}, this);
 	    }
-	    return seqIndex;
+	    return parseInt(seqIndex);
 	},
 	
 	/**
-	 * What is the index of the next card we are about to navigate to
-	 * @param {Number} index
-	 * @return {Number} The calculated (based on our direction) index
+	 * What is the index of the next card we are about to navigate to.
+	 * When using sequenceCtrl, if you moved from page 2 to page 4,
+	 * then you should be taken back to page 2 from page 4. 
+	 * You should not see page 3, which is now off your path because of your inputs in page 2.
+	 * The wizard has to be reset to resume 'free' navigation else this 'custom' path will not change.
+	 * I have tried not to attempt 'implementing' browser history here :)
+	 * 
+	 * @param {Number} index Optionall index to explicitly navigate to, used during 'Replay'
+	 * 
+	 * @return {Number} The card index we should navigate to
 	 */
 	getNext: function(index){
 		if(index !== undefined){
@@ -428,6 +463,7 @@ Ext.ux.Wizard = Ext.extend(Ext.ux.BasicWizard, {
 	
 	/**
 	 * Validate the currently active card
+	 * 
 	 * @return {Boolean} If the currently active card is valid
 	 */
   	validateCard: function() {
@@ -440,18 +476,23 @@ Ext.ux.Wizard = Ext.extend(Ext.ux.BasicWizard, {
   	
 	/**
 	 * Validate the all cards in the wizard
+	 * 
 	 * @return {Boolean} If the wizard cards are valid
 	 */
   	validate: function(){
   		return this.cards.isValid(true, false);
   	},
 	
-	// private
+	/**
+	 * @private
+	 */
 	beforenav: function(){
 		return this.validateCard();
 	},
 	
-	// private
+	/**
+	 * @private
+	 */
 	afternav: function(){
 		var cardItems = this.cards.items;
 		if( (this.next == cardItems.length-1) && (this.reviewEntries === true) ){
@@ -459,7 +500,9 @@ Ext.ux.Wizard = Ext.extend(Ext.ux.BasicWizard, {
 		}
 	},
 	  
-	// private	
+	/**
+	 * @private
+	 */
 	beforefinish: function(){
 		return this.validate();
 	},
@@ -520,7 +563,10 @@ Ext.ux.Wizard = Ext.extend(Ext.ux.BasicWizard, {
 	    });
 	},
 	
-	// private
+	/**
+	 * Gives us a way to see our entries in the wizard so far.
+	 * Usually called internally on the (internally injected) last card, only if {@link Ext.ux.Wizard#reviewEntries} is set to true
+	 */
 	showReview: function(){
 		if(this.reviewEntries === true){
 			if(this.reviewPanel === undefined){		
@@ -551,7 +597,11 @@ Ext.ux.Wizard = Ext.extend(Ext.ux.BasicWizard, {
 		}
 	},
 	
-	// private 
+	/**
+	 * Creates the Ext.data.SimpleStore by {@link Ext.ux.Wizard#showReview}
+	 * 
+	 * @return {Ext.data.SimpleStore} store used to show entry reviews
+	 */
 	getReviewStore: function(){
 		var valuesObj = this.getValues(true);
 		var stack = [];
@@ -571,7 +621,10 @@ Ext.ux.Wizard = Ext.extend(Ext.ux.BasicWizard, {
         });
 	},
 	
-	// private
+	/**
+	 * @private
+	 * @param {Object} index
+	 */
 	replay: function(index){
 		if(this.fireEvent('beforereplay') !== false){			
 			this.nextBtn.disable();	
@@ -584,20 +637,52 @@ Ext.ux.Wizard = Ext.extend(Ext.ux.BasicWizard, {
 	},
 	
 	/**
-	 * activate the replay of the wizard
-	 * @param {Object} index
+	 * Execute the replay of the wizard.
+	 * Has to be explicitly called (unlike in superclass version),
+	 * usually listening for, and handling the 'replay' event. E.g
+	<pre><code>
+	...
+	listeners: {
+		'replay': function(index){
+			this.submit({
+				success: function(){
+					this.doReplay(index);
+				}
+			});
+		}
+	}
+	</code></pre>
+	 * or overriding {@link Ext.ux.Wizard#onReplay} in a subclass, E.g
+	<pre><code>
+	...
+	onReplay: function(index){
+		this.submit({
+			success: function(){
+				this.doReplay(index);
+			}
+		});
+	}
+	</code></pre>
+	 * @param {Object} index Where we are replaying to
 	 */
 	doReplay: function(index){
 		this.reset();
 		Ext.ux.Wizard.superclass.doReplay.apply(this, arguments);		
 	},
 	
+	/**
+	 * @private
+	 */
 	help: function () {
 		var activeCard = this.getActiveCard();
 		this.onHelp(activeCard);
 		this.fireEvent('help', activeCard);
 	},
 	
+	/**
+	 * Context (card) sensitive help handler
+	 * @param {Ext.Panel} activeCard The currently active card
+	 */
 	onHelp: Ext.emptyFn
 });
 

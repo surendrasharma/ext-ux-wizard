@@ -88,6 +88,10 @@ Ext.ux.BasicWizard = Ext.extend(Ext.Panel, {
 	 */
 	toolbarLocation: 'bottom',
 	
+	/**
+     * Inits this component with the specified config-properties and automatically
+     * creates its components.
+     */
 	initComponent: function(){
 		this.cards = this.initCards(this.items);
 		this.cardCount = this.cards.items.length;		
@@ -117,32 +121,34 @@ Ext.ux.BasicWizard = Ext.extend(Ext.Panel, {
 		
 		this.addEvents(
 			/**
-        	 * @event finish
-        	 * Fires after the last card in the navigation is reached
+        	 * @event finish Fires after the last card in the navigation is reached
         	 */
 			'finish',
 			
 			/**
-			 * @event
-			 * Fires after 'replay' action is triggered
+			 * @event Fires after 'replay' action is triggered
+			 * @param {Number} index  Where we are replaying to
 			 */
 			 'replay',
 			 
 			 /**
-			  * @event navigate
-			  * Fires when a navigation occurs, if the beforenav event is not aborted
+			  * @event navigate Fires when a navigation occurs, if the beforenav event is not aborted
+			  * @param {Number} dir The navigation direction. bact => -1, next => 1
+			  * @param {Number} index Where to navigate to
 			  */
 			 'navigate',
 			 
 			 /**
-			  * @event beforenav
-			  * Fires before a navigation is attempted, return false if you wish to cancel the navigation
+			  * @event beforenav Fires before a navigation is attempted, 
+			  * return false if you wish to cancel the navigation.
+			  * @param {Number} dir The navigation direction. bact => -1, next => 1
+			  * @param {Number} index Where to navigate to
 			  */
 			 'beforenav',
 			 
 			 /**
-			  * @event afternav
-			  * Fires after a navigation has been handled
+			  * @event afternav Fires after a navigation has been handled
+			  * @param {Number} dir The navigation direction. bact => -1, next => 1
 			  */
 			 'afternav',
 			 
@@ -161,7 +167,10 @@ Ext.ux.BasicWizard = Ext.extend(Ext.Panel, {
 		
 	},
 	
-	// private
+	/**
+	 * @private
+	 * @param {Object} pages
+	 */
 	initCards: function(pages){
 		return new Ext.Container({
 			autoEl: {
@@ -180,7 +189,10 @@ Ext.ux.BasicWizard = Ext.extend(Ext.Panel, {
 		});
 	},
 	
-	// private
+	/**
+	 * @private
+	 * @param {Object} pages
+	 */
 	itemsInit: function(pages){
 		var stack = [];
 		if(pages){
@@ -198,7 +210,10 @@ Ext.ux.BasicWizard = Ext.extend(Ext.Panel, {
 		}
 	},
 	
-	// private
+	/**
+	 * @private
+	 * @param {Object} config
+	 */
 	buildPage: function(config){	
 		if( !Ext.isEmpty(config) ){
 			this.buildPlugins(config);
@@ -210,7 +225,10 @@ Ext.ux.BasicWizard = Ext.extend(Ext.Panel, {
 		return config;
 	},
 	
-	// private
+	/**
+	 * @private
+	 * @param {Object} item
+	 */
 	buildPlugins: function(item){
 		var plugins = item.plugins;
 		if( !Ext.isEmpty(plugins) ){        	
@@ -225,6 +243,9 @@ Ext.ux.BasicWizard = Ext.extend(Ext.Panel, {
         }
 	},
 	
+	/**
+     * Renders the wizard within it's container
+     */
 	onRender: function(){
 		Ext.ux.BasicWizard.superclass.onRender.apply(this, arguments);				
 		
@@ -254,12 +275,18 @@ Ext.ux.BasicWizard = Ext.extend(Ext.Panel, {
 		this.buildToolbar();				
 	},
 	
+	/**
+	 * Start the wizard after it is rendered
+	 */
 	afterRender: function() {
 		Ext.ux.BasicWizard.superclass.afterRender.apply(this, arguments);
 		this.start(this.activeIndex);
 	},
 	
-	// private
+	/**
+	 * Updates the step / trail information
+	 * @param {Ext.Container} activeCard the currently active card
+	 */
 	updateTrails: function(activeCard){
 		if(this.useTrail === true){
 			var trailText = (activeCard.title || activeCard.trailText);
@@ -268,7 +295,10 @@ Ext.ux.BasicWizard = Ext.extend(Ext.Panel, {
 		}
 	},
 	
-	// private
+	/**
+	 * @private
+	 * @param {Object} index
+	 */
 	start: function(index){
 		this.backBtn.setDisabled( index === 0 );		
 		this.nextBtn.setText(this.nextBtnText);
@@ -284,7 +314,8 @@ Ext.ux.BasicWizard = Ext.extend(Ext.Panel, {
 	
 	/**
 	 * Returns the navigatin toolbar, which may be a top or a bottom toolbar (tbar || bbar)
-	 * depending on the value of (@link Ext.ux.BasicWizard#toolbarLocation)
+	 * depending on the value of {@link Ext.ux.BasicWizard#toolbarLocation}
+	 * 
 	 * @return {Ext.Toolbar} Navigation toolbar
 	 */
 	getToolbar: function(){
@@ -292,17 +323,21 @@ Ext.ux.BasicWizard = Ext.extend(Ext.Panel, {
 		return tbar;
 	},
 	
-	// private
+	/**
+	 * @private
+	 */
 	buildToolbar: function(){
 		var tbar = this.getToolbar();
 		tbar.add('->', this.backBtn, '', '-', '', this.nextBtn, this.replayBtn || '');
 		tbar.doLayout();
 	},
 	
-	/*
+	/**
 	 * Return the card at the specified index or the currently active card
+	 * if the index param is not given.
 	 * @param (String/Number) index Optional query index
-	 * @return {Ext.Panel} The requested card
+	 * 
+	 * @return {Ext.Container} The requested card
 	 */
 	getCard: function(index){
 		var layout = this.cards.getLayout();
@@ -312,18 +347,19 @@ Ext.ux.BasicWizard = Ext.extend(Ext.Panel, {
 		return layout.container.getComponent(index);
 	},
 	
-	/*
+	/**
 	 * Returns the currently active card
-	 * @return {Ext.Panel} The currently active card
+	 * 
+	 * @return {Ext.Container} The currently active card
 	 */
 	getActiveCard: function(){
 	    return this.getCard();
 	},
 	
 	/**
-	 * Calculate the next navigation step based on where we are now or the
-	 * specified index
+	 * Calculate the next navigation step based on where we are now or the specified index
 	 * @param {String/Number} index Optional index to calculate with
+	 * 
 	 * @return {Number} position of the next card.
 	 */
 	getNext: function(index){
@@ -342,6 +378,7 @@ Ext.ux.BasicWizard = Ext.extend(Ext.Panel, {
 	/**
 	 * See if there is a card to navigate to, based on where we are
 	 * now and our navigation direction.
+	 * 
 	 * @return {Boolean} true if a 'next card' exist, else false
 	 */
 	hasNext: function(){
@@ -352,7 +389,9 @@ Ext.ux.BasicWizard = Ext.extend(Ext.Panel, {
 		return true;
 	},
 	
-	// private
+	/**
+	 * @private
+	 */
 	moveNext: function(){
 		var layout = this.cards.getLayout();
 		layout.setActiveItem(this.next);
@@ -363,7 +402,11 @@ Ext.ux.BasicWizard = Ext.extend(Ext.Panel, {
 		this.fireEvent('afternav', this.dir);
 	},
 	
-	// private
+	/**
+	 * @private
+	 * @param {Object} dir
+	 * @param {Object} index
+	 */
 	navigate: function(dir, index){
 		this.dir = dir;							
 		if(this.fireEvent('beforenav', dir, index) !== false){
@@ -414,7 +457,9 @@ Ext.ux.BasicWizard = Ext.extend(Ext.Panel, {
         }        
 	},
 		
-	// private
+	/**
+	 * @private
+	 */
 	finish: function(){
 		if(this.fireEvent('beforefinish') !== false){
 			// you are done and want to move on to
@@ -430,9 +475,16 @@ Ext.ux.BasicWizard = Ext.extend(Ext.Panel, {
 		}
 	},
 	
+	/**
+	 * Called when the next-button is click after reaching th last card.
+	 * Implementations can close the wizard window here.
+	 */
 	onFinish: Ext.emptyFn,
 	
-	// private
+	/**
+	 * @private
+	 * @param {Object} index
+	 */
 	replay: function(index){
 		if(this.fireEvent('beforereplay') !== false){			
 			this.nextBtn.disable();	
@@ -446,8 +498,8 @@ Ext.ux.BasicWizard = Ext.extend(Ext.Panel, {
 	},
 	
 	/**
-	 * activate the replay of the wizard
-	 * @param {Object} index
+	 * Ectivate the replay of the wizard
+	 * @param {Object} index Where we are replaying to
 	 */
 	doReplay: function(index){
 		this.start(index);	

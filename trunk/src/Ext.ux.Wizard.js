@@ -399,7 +399,8 @@ Ext.ux.Wizard = Ext.extend(Ext.ux.BasicWizard, {
 	 * and will likely fail when we need to route based on the values of several fields.
 	 * @param {Ext.Panel} panel the currently active card
 	 * 
-	 * @return {Number} The card index we should navigate to from here.
+	 * @return {Number} The card index we should navigate to from here, 
+	 * or null if no sequenceCtrl is set on the current card.
 	 */
 	sequenceCtrl: function(panel){
 	    var seqIndex = null;
@@ -410,7 +411,7 @@ Ext.ux.Wizard = Ext.extend(Ext.ux.BasicWizard, {
 	        	seqIndex = field.values[fieldValues[field.key]];
 	      	}, this);
 	    }
-	    return parseInt(seqIndex);
+	    return seqIndex;
 	},
 	
 	/**

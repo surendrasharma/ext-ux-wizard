@@ -5,19 +5,20 @@
     <link rel="stylesheet" type="text/css" href="../../../lib/extjs/ext_2_2_1/resources/css/ext-all.css">
 	<link rel="stylesheet" type="text/css" href="../../../lib/extjs/custom/tbar-layout/ToolbarLayout.css">
 	<link rel="stylesheet" type="text/css" href="../../../lib/extjs/custom/formgroup/Ext.ux.FormGroup.css">
-	<link rel="stylesheet" type="text/css" href="src/res/css/Ext.ux.Wizard.css">
+	<link rel="stylesheet" type="text/css" href="src/css/Ext.ux.Wizard.css">
 		
     <script type="text/javascript" src="../../../lib/extjs/ext_2_2_1/adapter/ext/ext-base.js"></script>
     <script type="text/javascript" src="../../../lib/extjs/ext_2_2_1/ext-all-debug.js"></script>
+	
 	<script type="text/javascript" src="../../../lib/extjs/custom/tbar-layout/ToolbarLayout.js"></script>
 	<script type="text/javascript" src="../../../lib/extjs/custom/Ext.ux.SlickCardLayout.js"></script>	
-	<script type="text/javascript" src="../../../lib/extjs/custom/formgroup/Ext.ux.FormGroup.js"></script>	
-		
-	<script type="text/javascript" src="src/Ext.ux.Image.js"></script>
+	<script type="text/javascript" src="../../../lib/extjs/custom/formgroup/Ext.ux.FormGroup.js"></script>			
+	<script type="text/javascript" src="../../../lib/extjs/custom/ux-image/Ext.ux.Image.js"></script>
+	<script type="text/javascript" src="../../../lib/extjs/custom/xmetaform/Ext.ux.form.XMetaForm.js"></script>
+	
 	<script type="text/javascript" src="src/Ext.ux.WizardWest.js"></script>
     <script type="text/javascript" src="src/Ext.ux.WizardHeader.js"></script>
-	<script type="text/javascript" src="src/Ext.ux.BasicWizard.js"></script>
-	<script type="text/javascript" src="../../../lib/extjs/custom/Ext.ux.form.XMetaForm.js"></script>
+	<script type="text/javascript" src="src/Ext.ux.BasicWizard.js"></script>	
     <script type="text/javascript" src="src/Ext.ux.Wizard.js"></script>
 
     <script type="text/javascript">
@@ -45,10 +46,10 @@
 							replayTo: 1,
 							replayBtnTxt: 'Create &amp; Continue',
 							reviewEntries: true,
-							url: 'src/res/php/wizardsubmit.php',
+							url: 'src/php/wizardsubmit.php',
 							headerConfig: {
 								titleText: 'New Employee Wizard',
-								titleImg: 'src/res/imgs/wizard-wand.jpg'
+								titleImg: 'src/imgs/wizard-wand.jpg'
 							},
 							items: [{
 								index: 0,
@@ -168,10 +169,10 @@
 							reviewEntries: true,
 							headerConfig: {
 								titleText: 'New Employee Wizard',
-								titleImg: 'src/res/imgs/wizard-wand.jpg'
+								titleImg: 'src/imgs/wizard-wand.jpg'
 							},
 							autoInit: {
-								url: 'src/res/php/wizardconfig.php',
+								url: 'src/php/wizardconfig.php',
 								params: {
 								    query: 'get',								    
 									mode: 'userprofile'

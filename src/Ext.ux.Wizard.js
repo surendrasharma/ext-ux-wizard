@@ -139,7 +139,7 @@ Ext.ux.Wizard = Ext.extend(Ext.ux.BasicWizard, {
 			'afternav': this.afternav,
 			'beforenav': this.beforenav,
 			'beforefinish': this.beforefinish
-		})
+		});
 		
 		if(this.helpBtn){
 			Ext.apply(this.helpBtn, {
@@ -156,7 +156,7 @@ Ext.ux.Wizard = Ext.extend(Ext.ux.BasicWizard, {
 	initCards: function(pages){
 		var self = this;
 		if(this.autoInit !== false){
-			Ext.apply(this.autoInit.params || {}, {meta:true})
+			Ext.apply(this.autoInit.params || {}, {meta:true});
 		}
 		return new Ext.ux.form.XMetaForm({
 			loadingText: this.loadingText,
@@ -198,7 +198,7 @@ Ext.ux.Wizard = Ext.extend(Ext.ux.BasicWizard, {
 		var items = Ext.ux.Wizard.superclass.itemsInit.apply(this, arguments);
 		if(this.reviewEntries === true && Ext.isArray(items)){
 			items.push({
-				index: this.cardCount,
+				index: this.cardCount || items.length,
 				trailText: 'Confirmation'
 			});
 		}			
@@ -433,14 +433,14 @@ Ext.ux.Wizard = Ext.extend(Ext.ux.BasicWizard, {
 		
 		var activeCard = this.getActiveCard();		
 		var activeCardIndex = parseInt(activeCard.index, 10);
-		var next = this.sequenceCtrl(activeCard);
+		var next = this.sequenceCtrl(activeCard);		
 		
 		if(this.dir === -1){
 			var prevCardIndex = this.prev[activeCardIndex];
 			if(Ext.isEmpty(prevCardIndex)){
 				next = activeCardIndex + this.dir;
 			}else{
-				next = prevCardIndex;
+				next = prevCardIndex;		
 			}			
 		}else if(this.dir === 1){						
 			if(Ext.isEmpty(next)){
@@ -513,10 +513,12 @@ Ext.ux.Wizard = Ext.extend(Ext.ux.BasicWizard, {
 	 * @param {Object} o Submission parameters
 	 */
 	submit: function(o){
-		var oParams = {};
+		var oParams;
 		if(typeof this.autoInit === 'object'){
 			oParams = this.autoInit;
 		}
+
+                oParams = Ext.apply(oParams || {}, {params: this.baseParams});
 		oParams = Ext.apply(oParams, o || {});
 		
 		// we may not have loaded pages from the server,
